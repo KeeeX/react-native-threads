@@ -1,6 +1,6 @@
 module.exports = {
   dependencies: {
-    "react-native-threads": {
+    "@keeex/react-native-threads": {
       platforms: {
         android: null,
       },
