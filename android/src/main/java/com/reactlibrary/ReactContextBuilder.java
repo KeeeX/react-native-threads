@@ -1,4 +1,4 @@
-package com.reactlibrary;
+package me.keeex.rnthread;
 
 import android.content.Context;
 import android.net.Uri;

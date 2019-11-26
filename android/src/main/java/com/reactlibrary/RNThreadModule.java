@@ -1,4 +1,4 @@
-package com.reactlibrary;
+package me.keeex.rnthread;
 
 import android.os.Handler;
 import android.os.Looper;

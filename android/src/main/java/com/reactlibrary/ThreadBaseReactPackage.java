@@ -1,4 +1,4 @@
-package com.reactlibrary;
+package me.keeex.rnthread;
 
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactPackage;

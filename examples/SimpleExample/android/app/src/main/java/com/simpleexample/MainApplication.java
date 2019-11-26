@@ -3,7 +3,7 @@ package com.simpleexample;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.reactlibrary.RNThreadPackage;
+import me.keeex.rnthread.RNThreadPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;

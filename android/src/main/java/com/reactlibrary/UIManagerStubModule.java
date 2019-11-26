@@ -1,4 +1,4 @@
-package com.reactlibrary;
+package me.keeex.rnthread;
 
 import com.facebook.react.bridge.OnBatchCompleteListener;
 import com.facebook.react.bridge.ReactApplicationContext;

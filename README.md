@@ -56,7 +56,7 @@ like this:
 #### Android
 
 1. Open up `android/app/src/main/java/[...]/MainApplication.java`
-  - Add `import com.reactlibrary.RNThreadPackage;` to the imports at the top of the file
+  - Add `import me.keeex.rnthread.RNThreadPackage;` to the imports at the top of the file
   - Add `new RNThreadPackage(mReactNativeHost)` to the list returned by the `getPackages()` method
   - Also note that only the official react native modules are available from your
     threads (vibration, fetch, etc...). To include additional native modules in your
