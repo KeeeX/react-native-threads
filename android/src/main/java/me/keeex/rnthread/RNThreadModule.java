@@ -109,14 +109,19 @@ public class RNThreadModule extends ReactContextBaseJavaModule implements Lifecy
   }
 
   @ReactMethod
-  public void postThreadMessage(int threadId, String message) {
+  public void postThreadMessage(int threadId, String message, final Promise promise) {
     JSThread thread = threads.get(threadId);
-    if (thread == null) {
-      Log.d(TAG, "Cannot post message to thread - thread is null for id " + threadId);
-      return;
-    }
+    try {
+      if (thread == null) {
+        Log.d(TAG, "Cannot post message to thread - thread is null for id " + threadId);
+        throw new Exception("thread is null");
+      }
 
-    thread.postMessage(message);
+      thread.postMessage(message);
+      promise.resolve();
+    } catch (Exception e) {
+      promise.reject(e);
+    }
   }
 
   @Override

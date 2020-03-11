@@ -1,31 +1,42 @@
 import {
   NativeModules,
   DeviceEventEmitter,
-} from 'react-native';
+} from "react-native";
 
-const { ThreadManager } = NativeModules;
+const {ThreadManager} = NativeModules;
 
 export default class Thread {
   constructor(jsPath) {
-    if (!jsPath || !jsPath.endsWith('.js')) {
-      throw new Error('Invalid path for thread. Only js files are supported');
+    if (!jsPath || !jsPath.endsWith(".js")) {
+      throw new Error("Invalid path for thread. Only js files are supported");
     }
+    this.jsPath = jsPath;
+    this.id = null;
+  }
 
-    this.id = ThreadManager.startThread(jsPath.replace(".js", ""))
+  start() {
+    return ThreadManager.startThread(this.jsPath.replace(".js", ""))
       .then(id => {
-        DeviceEventEmitter.addListener(`Thread${id}`, (message) => {
-          !!message && this.onmessage && this.onmessage(message);
+        DeviceEventEmitter.addListener(`Thread${id}`, message => {
+          Boolean(message) && this.onmessage && this.onmessage(message);
         });
-        return id;
-      })
-      .catch(err => { throw new Error(err) });
+        this.id = id;
+      });
+  }
+
+  checkId() {
+    if (this.id === null) {
+      throw new Error("NULL id");
+    }
   }
 
   postMessage(message) {
-    this.id.then(id => ThreadManager.postThreadMessage(id, message));
+    this.checkId();
+    return ThreadManager.postThreadMessage(this.id, message);
   }
 
   terminate() {
-    this.id.then(ThreadManager.stopThread);
+    this.checkId();
+    ThreadManager.stopThread(this.id);
   }
 }
