@@ -8,13 +8,15 @@ import {
 import { Thread } from 'react-native-threads';
 
 export default class App extends Component {
-  state = { messages: [] }
+  state = { messages: [], ready: false }
 
   workerThread = null;
 
   componentDidMount() {
     this.workerThread = new Thread('./worker.thread.js');
     this.workerThread.onmessage = this.handleMessage;
+    this.workerThread.start()
+      .then(() => this.setState({ready: true}));
   }
 
   componentWillUnmount() {
@@ -31,6 +33,15 @@ export default class App extends Component {
   }
 
   render() {
+    if (!this.state.ready) {
+      return (
+        <View style={styles.container}>
+          <Text>
+            Starting thread
+          </Text>
+        </View>
+      )
+    }
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>

@@ -92,11 +92,18 @@ In your application code (react components, etc.):
 ```javascript
 import { Thread } from 'react-native-threads';
 
-// start a new react native JS process
+// create a new react native JS process
 const thread = new Thread('path/to/thread.js');
 
+// Start the thread
+thread.start()
+  .then(() => {/* thread is started */})
+  .catch(console.error);
+
 // send a message, strings only
-thread.postMessage('hello');
+thread.postMessage('hello')
+  .then(() => {/* message is sent */})
+  .catch(console.error);
 
 // listen for messages
 thread.onmessage = (message) => console.log(message);
