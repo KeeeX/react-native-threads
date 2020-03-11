@@ -29,5 +29,10 @@
   ],
   "peerDependencies": {
     "react-native": ">=0.50.0"
+  },
+  "devDependencies": {
+    "@keeex/eslint-config": "^0.2.12",
+    "eslint": "^6.8.0",
+    "eslint-plugin-promise": "^4.2.1"
   }
 }
