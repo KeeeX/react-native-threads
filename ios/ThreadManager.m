@@ -80,7 +80,7 @@ RCT_EXPORT_METHOD(postThreadMessage: (int)threadId
 
   [threadBridge.eventDispatcher sendAppEventWithName:@"ThreadMessage"
                                                body:message];
-  resolve();
+  resolve(nil);
 }
 
 - (void)invalidate {

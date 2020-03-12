@@ -9,10 +9,13 @@ RCT_EXPORT_MODULE();
 @synthesize parentBridge = _parentBridge;
 @synthesize threadId = _threadId;
 
-RCT_EXPORT_METHOD(postMessage: (NSString *)message)
+RCT_EXPORT_METHOD(postMessage: (NSString *)message
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
 {
   if (self.parentBridge == nil) {
-    NSLog(@"No parent bridge defined - abord sending thread message");
+    NSLog(@"No parent bridge defined - abort sending thread message");
+    reject();
     return;
   }
 
@@ -20,6 +23,7 @@ RCT_EXPORT_METHOD(postMessage: (NSString *)message)
 
   [self.parentBridge.eventDispatcher sendAppEventWithName:eventName
                                                body:message];
+  resolve(nil);
 }
 
 @end

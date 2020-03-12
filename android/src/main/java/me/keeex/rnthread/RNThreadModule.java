@@ -31,7 +31,7 @@ import okio.Sink;
 
 public class RNThreadModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
 
-  private String TAG = "ThreadManager";
+  private static final String TAG = "RNThread: ThreadManager";
   private HashMap<Integer, JSThread> threads;
 
   private ReactApplicationContext reactApplicationContext;
@@ -41,6 +41,7 @@ public class RNThreadModule extends ReactContextBaseJavaModule implements Lifecy
   private ReactPackage additionalThreadPackages[];
 
   public RNThreadModule(final ReactApplicationContext reactContext, ReactNativeHost reactNativehost, ReactPackage additionalThreadPackages[]) {
+    Log.d(TAG, "ctor()")
     super(reactContext);
     this.reactApplicationContext = reactContext;
     threads = new HashMap<>();
@@ -56,7 +57,7 @@ public class RNThreadModule extends ReactContextBaseJavaModule implements Lifecy
 
   @ReactMethod
   public void startThread(final String jsFileName, final Promise promise) {
-    Log.d(TAG, "Starting web thread - " + jsFileName);
+    Log.d(TAG, "startThread(\"" + jsFileName + "\")");
 
     // When we create the absolute file path later, a "./" will break it.
     // Remove the leading "./" if it exists.
@@ -78,14 +79,15 @@ public class RNThreadModule extends ReactContextBaseJavaModule implements Lifecy
               .setReactInstanceManager(getReactInstanceManager())
               .setReactPackages(threadPackages);
 
-      JSThread thread = new JSThread(jsFileSlug);
-      thread.runFromContext(
-              getReactApplicationContext(),
-              threadContextBuilder
+      JSThread thread = new JSThread(jsFileSlug,
+                                     getReactApplicationContext(),
+                                     threadContextBuilder);
       );
       threads.put(thread.getThreadId(), thread);
       promise.resolve(thread.getThreadId());
     } catch (Exception e) {
+      Log.d(TAG, "Thrown exception in startThread()");
+      e.printStackTrace();
       promise.reject(e);
       getDevSupportManager().handleException(e);
     }
@@ -93,6 +95,7 @@ public class RNThreadModule extends ReactContextBaseJavaModule implements Lifecy
 
   @ReactMethod
   public void stopThread(final int threadId) {
+    Log.d(TAG, "stopThread(" + threadId + ")")
     final JSThread thread = threads.get(threadId);
     if (thread == null) {
       Log.d(TAG, "Cannot stop thread - thread is null for id " + threadId);
@@ -102,6 +105,7 @@ public class RNThreadModule extends ReactContextBaseJavaModule implements Lifecy
     new Handler(Looper.getMainLooper()).post(new Runnable() {
       @Override
       public void run() {
+        Log.d(TAG, "terminate called on thread id " + threadId);
         thread.terminate();
         threads.remove(threadId);
       }
@@ -110,6 +114,7 @@ public class RNThreadModule extends ReactContextBaseJavaModule implements Lifecy
 
   @ReactMethod
   public void postThreadMessage(int threadId, String message, final Promise promise) {
+    Log.d(TAG, "postThreadMessage(" + threadId + ", \"" + message + "\")");
     JSThread thread = threads.get(threadId);
     try {
       if (thread == null) {
@@ -118,17 +123,21 @@ public class RNThreadModule extends ReactContextBaseJavaModule implements Lifecy
       }
 
       thread.postMessage(message);
-      promise.resolve();
+      promise.resolve(null);
     } catch (Exception e) {
+      Log.d(TAG, "Exception thrown in postThreadMessage()");
+      e.printStackTrace();
       promise.reject(e);
     }
   }
 
   @Override
   public void onHostResume() {
+    Log.d(TAG, "onHostResume");
     new Handler(Looper.getMainLooper()).post(new Runnable() {
       @Override
       public void run() {
+        Log.d(TAG, "Calling thread.onHostResume");
         for (int threadId : threads.keySet()) {
           threads.get(threadId).onHostResume();
         }
@@ -138,9 +147,11 @@ public class RNThreadModule extends ReactContextBaseJavaModule implements Lifecy
 
   @Override
   public void onHostPause() {
+    Log.d(TAG, "onHostPause");
     new Handler(Looper.getMainLooper()).post(new Runnable() {
       @Override
       public void run() {
+        Log.d(TAG, "Calling thread.onHostPause");
         for (int threadId : threads.keySet()) {
           threads.get(threadId).onHostPause();
         }
@@ -150,11 +161,12 @@ public class RNThreadModule extends ReactContextBaseJavaModule implements Lifecy
 
   @Override
   public void onHostDestroy() {
-    Log.d(TAG, "onHostDestroy - Clean JS Threads");
+    Log.d(TAG, "onHostDestroy");
 
     new Handler(Looper.getMainLooper()).post(new Runnable() {
       @Override
       public void run() {
+        Log.d(TAG, "Calling thread.terminate()");
         for (int threadId : threads.keySet()) {
           threads.get(threadId).terminate();
         }
