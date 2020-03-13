@@ -37,8 +37,8 @@ public class ThreadSelfModule extends ReactContextBaseJavaModule {
     public void postMessage(String data, final Promise promise) {
         Log.d(TAG, "postMessage(\"" + data + "\")");
         if (parentContext == null) {
-            Log.d(TAG, "No parentContext(), expect breakage");
-            promise.reject(null);
+            Log.d(TAG, "No parentContext, expect breakage");
+            promise.reject("No parentContext, expect breakage");
             return;
         }
 

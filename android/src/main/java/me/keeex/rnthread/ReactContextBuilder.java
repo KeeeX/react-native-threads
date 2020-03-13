@@ -71,8 +71,9 @@ public class ReactContextBuilder {
             String deviceName = Uri.encode(getFriendlyDeviceName());
             // If JSC is included, use it as normal
             SoLoader.loadLibrary("jscexecutor");
-            return new JSCExecutorFactory(appName, deviceName);
+            JavaScriptExecutorFactory factory = new JSCExecutorFactory(appName, deviceName);
             Log.d(TAG, "Use JSC");
+            return factory;
         } catch (UnsatisfiedLinkError jscE) {
             // Otherwise use Hermes
             Log.d(TAG, "Use Hermes");
