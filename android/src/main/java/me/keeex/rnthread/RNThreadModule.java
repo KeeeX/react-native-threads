@@ -41,8 +41,8 @@ public class RNThreadModule extends ReactContextBaseJavaModule implements Lifecy
   private ReactPackage additionalThreadPackages[];
 
   public RNThreadModule(final ReactApplicationContext reactContext, ReactNativeHost reactNativehost, ReactPackage additionalThreadPackages[]) {
-    Log.d(TAG, "ctor()")
     super(reactContext);
+    Log.d(TAG, "ctor()");
     this.reactApplicationContext = reactContext;
     threads = new HashMap<>();
     this.reactNativeHost = reactNativehost;
@@ -82,7 +82,6 @@ public class RNThreadModule extends ReactContextBaseJavaModule implements Lifecy
       JSThread thread = new JSThread(jsFileSlug,
                                      getReactApplicationContext(),
                                      threadContextBuilder);
-      );
       threads.put(thread.getThreadId(), thread);
       promise.resolve(thread.getThreadId());
     } catch (Exception e) {
@@ -95,7 +94,7 @@ public class RNThreadModule extends ReactContextBaseJavaModule implements Lifecy
 
   @ReactMethod
   public void stopThread(final int threadId) {
-    Log.d(TAG, "stopThread(" + threadId + ")")
+    Log.d(TAG, "stopThread(" + threadId + ")");
     final JSThread thread = threads.get(threadId);
     if (thread == null) {
       Log.d(TAG, "Cannot stop thread - thread is null for id " + threadId);

@@ -14,7 +14,7 @@ public class JSThread {
     /**
      * Tag used for logging purpose
      */
-    private static final String TAG = "RNThread: JSThread"
+    private static final String TAG = "RNThread: JSThread";
     /**
      * Identifier used to match with the JavaScript instance of Thread
      */
@@ -39,7 +39,7 @@ public class JSThread {
      * Constructor
      */
     public JSThread(String jsSlugname, ReactApplicationContext context, ReactContextBuilder reactContextBuilder) throws Exception {
-        Log.d(TAG, "ctor(" + jsSlugname + ")")
+        Log.d(TAG, "ctor(" + jsSlugname + ")");
         this.id = JSThread.mNextId;
         ++JSThread.mNextId;
         Log.d(TAG, "ThreadId=" + this.id);
