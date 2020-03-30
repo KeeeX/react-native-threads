@@ -15,7 +15,11 @@ RCT_EXPORT_METHOD(postMessage: (NSString *)message
 {
   if (self.parentBridge == nil) {
     NSLog(@"No parent bridge defined - abort sending thread message");
-    reject();
+    reject(
+      @"Error for paren bridge",
+      @"No parent bridge defined - abort sending thread message",
+      nil
+    );
     return;
   }
 

@@ -39,7 +39,11 @@ RCT_REMAP_METHOD(startThread,
   }
   @catch ( NSException *e ) {
     NSLog(@"Error when starting thread");
-    reject();
+    reject(
+      @"Thread error",
+      @"Error when starting thread",
+      nil
+    );
   }
 }
 
@@ -67,14 +71,22 @@ RCT_EXPORT_METHOD(postThreadMessage: (int)threadId
 {
   if (threads == nil) {
     NSLog(@"Empty list of threads. abort posting to thread with id %i", threadId);
-    reject();
+    reject(
+      @"Thread error",
+      @"Empty list of threads. abort posting to thread",
+      nil
+    );
     return;
   }
 
   RCTBridge *threadBridge = threads[[NSNumber numberWithInt:threadId]];
   if (threadBridge == nil) {
     NSLog(@"Thread is NIl. abort posting to thread with id %i", threadId);
-    reject();
+    reject(
+      @"Thread error",
+      @"Thread is NIl. abort posting to thread",
+      nil
+    );
     return;
   }
 
