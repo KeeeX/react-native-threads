@@ -1,8 +1,8 @@
 module.exports = {
-  dependencies: {
-    "react-native-threads": {
-      platforms: {
-        android: null,
+  dependency: {
+    platforms: {
+      android: {
+        packageInstance: 'new RNThreadPackage(reactNativeHost)',
       },
     },
   },
